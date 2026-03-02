@@ -1,0 +1,16 @@
+schema: '2.0'
+stages:
+  create_manifest:
+    cmd: python scripts/create_manifest.py
+    deps:
+    - path: scripts/create_manifest.py
+      hash: md5
+      md5: 77ecb30a82680a4f09116f1b45f712df
+      size: 506
+      isexec: true
+    outs:
+    - path: data/manifests/en/clean.jsonl
+      hash: md5
+      md5: 6c23426dea5ebbfbe18bb53cdeb5eb27
+      size: 99
+      isexec: true
