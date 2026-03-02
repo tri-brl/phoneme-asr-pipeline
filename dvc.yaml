@@ -37,3 +37,11 @@ stages:
       - data/manifests/en/hypotheses.jsonl
     outs:
       - results/metrics.json
+
+  plot_results:
+    cmd: python scripts/plot_results.py
+    deps:
+      - scripts/plot_results.py
+      - results/metrics.json
+    outs:
+      - results/wer_plot.png

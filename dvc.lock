@@ -90,3 +90,22 @@ stages:
       md5: cb1209a687fe8e6a470d508d251d0403
       size: 90
       isexec: true
+  plot_results:
+    cmd: python scripts/plot_results.py
+    deps:
+    - path: results/metrics.json
+      hash: md5
+      md5: cb1209a687fe8e6a470d508d251d0403
+      size: 90
+      isexec: true
+    - path: scripts/plot_results.py
+      hash: md5
+      md5: 733ace83292fef7395557855c68153f2
+      size: 624
+      isexec: true
+    outs:
+    - path: results/wer_plot.png
+      hash: md5
+      md5: a9e5b8fcc79aaf3271bc2ba4e57b51d6
+      size: 13248
+      isexec: true
