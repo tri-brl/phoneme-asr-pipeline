@@ -33,3 +33,22 @@ stages:
       md5: 57a29c44fbc22b6a61670c87403c3336
       size: 157
       isexec: true
+  add_noise:
+    cmd: python scripts/add_noise.py
+    deps:
+    - path: data/manifests/en/phonemes.jsonl
+      hash: md5
+      md5: 57a29c44fbc22b6a61670c87403c3336
+      size: 157
+      isexec: true
+    - path: scripts/add_noise.py
+      hash: md5
+      md5: 7cd577c0b77dabbf1694602a46f57423
+      size: 743
+      isexec: true
+    outs:
+    - path: data/manifests/en/noisy.jsonl
+      hash: md5
+      md5: ce69ae44cdd2d33c288acab98bdd6c76
+      size: 188
+      isexec: true
