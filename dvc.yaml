@@ -5,3 +5,11 @@ stages:
       - scripts/create_manifest.py
     outs:
       - data/manifests/en/clean.jsonl
+
+  text_to_phonemes:
+    cmd: python scripts/text_to_phonemes.py
+    deps:
+      - scripts/text_to_phonemes.py
+      - data/manifests/en/clean.jsonl
+    outs:
+      - data/manifests/en/phonemes.jsonl

@@ -14,3 +14,22 @@ stages:
       md5: 6c23426dea5ebbfbe18bb53cdeb5eb27
       size: 99
       isexec: true
+  text_to_phonemes:
+    cmd: python scripts/text_to_phonemes.py
+    deps:
+    - path: data/manifests/en/clean.jsonl
+      hash: md5
+      md5: 6c23426dea5ebbfbe18bb53cdeb5eb27
+      size: 99
+      isexec: true
+    - path: scripts/text_to_phonemes.py
+      hash: md5
+      md5: 1b11bf91b626d2a8fae40049257ccbe5
+      size: 837
+      isexec: true
+    outs:
+    - path: data/manifests/en/phonemes.jsonl
+      hash: md5
+      md5: 57a29c44fbc22b6a61670c87403c3336
+      size: 157
+      isexec: true
