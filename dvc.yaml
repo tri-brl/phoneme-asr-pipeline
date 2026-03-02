@@ -21,3 +21,11 @@ stages:
       - data/manifests/en/phonemes.jsonl
     outs:
       - data/manifests/en/noisy.jsonl
+
+  inference:
+    cmd: python scripts/inference.py
+    deps:
+      - scripts/inference.py
+      - data/manifests/en/noisy.jsonl
+    outs:
+      - data/manifests/en/hypotheses.jsonl

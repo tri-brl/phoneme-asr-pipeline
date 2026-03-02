@@ -52,3 +52,22 @@ stages:
       md5: ce69ae44cdd2d33c288acab98bdd6c76
       size: 188
       isexec: true
+  inference:
+    cmd: python scripts/inference.py
+    deps:
+    - path: data/manifests/en/noisy.jsonl
+      hash: md5
+      md5: ce69ae44cdd2d33c288acab98bdd6c76
+      size: 188
+      isexec: true
+    - path: scripts/inference.py
+      hash: md5
+      md5: 0c24c34041b3158b4176a37036968ff9
+      size: 645
+      isexec: true
+    outs:
+    - path: data/manifests/en/hypotheses.jsonl
+      hash: md5
+      md5: 4da02c5e278ad83ec1b43cbd835e605f
+      size: 217
+      isexec: true
