@@ -29,3 +29,11 @@ stages:
       - data/manifests/en/noisy.jsonl
     outs:
       - data/manifests/en/hypotheses.jsonl
+
+  evaluate:
+    cmd: python scripts/evaluate.py
+    deps:
+      - scripts/evaluate.py
+      - data/manifests/en/hypotheses.jsonl
+    outs:
+      - results/metrics.json

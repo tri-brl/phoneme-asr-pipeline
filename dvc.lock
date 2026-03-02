@@ -71,3 +71,22 @@ stages:
       md5: 4da02c5e278ad83ec1b43cbd835e605f
       size: 217
       isexec: true
+  evaluate:
+    cmd: python scripts/evaluate.py
+    deps:
+    - path: data/manifests/en/hypotheses.jsonl
+      hash: md5
+      md5: 4da02c5e278ad83ec1b43cbd835e605f
+      size: 217
+      isexec: true
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: a71079f543692eeff9d696f4447b1068
+      size: 922
+      isexec: true
+    outs:
+    - path: results/metrics.json
+      hash: md5
+      md5: cb1209a687fe8e6a470d508d251d0403
+      size: 90
+      isexec: true
