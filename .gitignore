@@ -1,0 +1,5 @@
+.venv/
+data/
+results/
+*.tar.gz
+*.zip
