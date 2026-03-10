@@ -31,25 +31,11 @@ stages:
     outs:
     - data/manifests/en/hypotheses.jsonl
 
-  evaluate:
-    cmd: python scripts/evaluate.py
-    deps:
-    - scripts/evaluate.py
-    - data/manifests/en/hypotheses.jsonl
-    metrics:
-    - results/metrics.json
-
-  plot_results:
-    cmd: python scripts/plot_results.py
-    deps:
-    - scripts/plot_results.py
-    - results/metrics.json
-    plots:
-    - results/per_vs_snr.png
-
-  # Hindi pipeline stages
   merge_hi:
-    cmd: cat results/hi_whisper_chunk*.jsonl > results/hi_whisper_full.jsonl
+    cmd: cat results/hi_whisper_chunk1.jsonl results/hi_whisper_chunk2.jsonl 
+      results/hi_whisper_chunk3.jsonl results/hi_whisper_chunk4.jsonl 
+      results/hi_whisper_chunk5.jsonl results/hi_whisper_chunk6.jsonl > 
+      results/hi_whisper_full.jsonl
     deps:
     - results/hi_whisper_chunk1.jsonl
     - results/hi_whisper_chunk2.jsonl

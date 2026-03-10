@@ -19,101 +19,6 @@ stages:
       md5: abb58d5b3ea21a28a585a1bd11cc7289
       size: 325
       isexec: true
-  text_to_phonemes:
-    cmd: python scripts/text_to_phonemes.py
-    deps:
-    - path: data/manifests/en/clean.jsonl
-      hash: md5
-      md5: abb58d5b3ea21a28a585a1bd11cc7289
-      size: 325
-      isexec: true
-    - path: scripts/text_to_phonemes.py
-      hash: md5
-      md5: 1b11bf91b626d2a8fae40049257ccbe5
-      size: 837
-      isexec: true
-    outs:
-    - path: data/manifests/en/phonemes.jsonl
-      hash: md5
-      md5: da271f5665112c452a556272ca6a8dda
-      size: 470
-      isexec: true
-  add_noise:
-    cmd: python scripts/add_noise.py
-    deps:
-    - path: data/manifests/en/phonemes.jsonl
-      hash: md5
-      md5: da271f5665112c452a556272ca6a8dda
-      size: 470
-      isexec: true
-    - path: scripts/add_noise.py
-      hash: md5
-      md5: 7cd577c0b77dabbf1694602a46f57423
-      size: 743
-      isexec: true
-    outs:
-    - path: data/manifests/en/noisy.jsonl
-      hash: md5
-      md5: 4301e3aad2dd120a10fb1a8f60687fe3
-      size: 589
-      isexec: true
-  inference:
-    cmd: python scripts/inference.py
-    deps:
-    - path: data/manifests/en/noisy.jsonl
-      hash: md5
-      md5: 56c8455b97bc523cecfb3f42794f5bee
-      size: 3293
-      isexec: true
-    - path: scripts/inference.py
-      hash: md5
-      md5: 82b99f60fa9d4cefe7c82b448c60eb3e
-      size: 1717
-      isexec: true
-    outs:
-    - path: data/manifests/en/hypotheses.jsonl
-      hash: md5
-      md5: 1923c4fde479bebf13359577b84d806e
-      size: 4440
-      isexec: true
-  evaluate:
-    cmd: python scripts/evaluate.py
-    deps:
-    - path: data/manifests/en/hypotheses.jsonl
-      hash: md5
-      md5: 1923c4fde479bebf13359577b84d806e
-      size: 4440
-      isexec: true
-    - path: scripts/evaluate.py
-      hash: md5
-      md5: aabff6994403f6e0e7b6d46091a7577a
-      size: 1489
-      isexec: true
-    outs:
-    - path: results/metrics.json
-      hash: md5
-      md5: edbb7af1e6a2f062a8d111935d9eea7f
-      size: 224
-      isexec: true
-  plot_results:
-    cmd: python scripts/plot_results.py
-    deps:
-    - path: results/metrics.json
-      hash: md5
-      md5: edbb7af1e6a2f062a8d111935d9eea7f
-      size: 224
-      isexec: true
-    - path: scripts/plot_results.py
-      hash: md5
-      md5: 73c26377dde429c84ce6a6aec7d64191
-      size: 830
-      isexec: true
-    outs:
-    - path: results/per_vs_snr.png
-      hash: md5
-      md5: fa49e8f03c8b6a8e7bb840819f1846eb
-      size: 27472
-      isexec: true
   phoneme_conversion:
     cmd: python scripts/phoneme_conversion.py
     deps:
@@ -151,4 +56,65 @@ stages:
       hash: md5
       md5: 56c8455b97bc523cecfb3f42794f5bee
       size: 3293
+      isexec: true
+  inference:
+    cmd: python scripts/inference.py
+    deps:
+    - path: data/manifests/en/noisy.jsonl
+      hash: md5
+      md5: 56c8455b97bc523cecfb3f42794f5bee
+      size: 3293
+      isexec: true
+    - path: scripts/inference.py
+      hash: md5
+      md5: 82b99f60fa9d4cefe7c82b448c60eb3e
+      size: 1717
+      isexec: true
+    outs:
+    - path: data/manifests/en/hypotheses.jsonl
+      hash: md5
+      md5: 1923c4fde479bebf13359577b84d806e
+      size: 4440
+      isexec: true
+  merge_hi:
+    cmd: cat results/hi_whisper_chunk1.jsonl results/hi_whisper_chunk2.jsonl 
+      results/hi_whisper_chunk3.jsonl results/hi_whisper_chunk4.jsonl 
+      results/hi_whisper_chunk5.jsonl results/hi_whisper_chunk6.jsonl > 
+      results/hi_whisper_full.jsonl
+    deps:
+    - path: results/hi_whisper_chunk1.jsonl
+      hash: md5
+      md5: 8668ad3656a461052ea7c8974ec219df
+      size: 492164
+      isexec: true
+    - path: results/hi_whisper_chunk2.jsonl
+      hash: md5
+      md5: e1a9d7d69f88810c99f6da7a14f61769
+      size: 485486
+      isexec: true
+    - path: results/hi_whisper_chunk3.jsonl
+      hash: md5
+      md5: 1df14a8f6d85546f541836034ede3ea1
+      size: 477362
+      isexec: true
+    - path: results/hi_whisper_chunk4.jsonl
+      hash: md5
+      md5: 03c6267746b6a08da7876a2dbf273b29
+      size: 517409
+      isexec: true
+    - path: results/hi_whisper_chunk5.jsonl
+      hash: md5
+      md5: 069318b5942ec764889d0bc2d7716818
+      size: 504959
+      isexec: true
+    - path: results/hi_whisper_chunk6.jsonl
+      hash: md5
+      md5: 64986e6ce18ae64db9439d7ea09ba01e
+      size: 259071
+      isexec: true
+    outs:
+    - path: results/hi_whisper_full.jsonl
+      hash: md5
+      md5: bfba0dd96c78c0dfdd8ee5808f73bc66
+      size: 2736451
       isexec: true
