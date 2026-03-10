@@ -148,10 +148,12 @@ dvc status
 
 
 
-Plots available in `/results/plots/`:
-- WER comparison across models
-- PER comparison across models
-- Speed vs robustness tradeoff visualization
+Plots available in `/results`:
+
+- wer_plot.png – WER comparison across models
+- per_vs_snr.png – PER vs SNR visualization
+- per_vs_snr_multi.png – PER vs SNR (multi-model comparison)
+- per_vs_snr_mean.png – PER vs SNR (mean values)
 
 ---
 
