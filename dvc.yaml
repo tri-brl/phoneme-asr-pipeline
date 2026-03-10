@@ -2,47 +2,101 @@ stages:
   create_manifest:
     cmd: python scripts/create_manifest.py
     deps:
-    - scripts/create_manifest.py
-    - data/raw/en/
+      - scripts/create_manifest.py
+      - data/raw/en/
     outs:
-    - data/manifests/en/clean.jsonl
+      - data/manifests/en/clean.jsonl
 
   phoneme_conversion:
     cmd: python scripts/phoneme_conversion.py
     deps:
-    - scripts/phoneme_conversion.py
-    - data/manifests/en/clean.jsonl
+      - scripts/phoneme_conversion.py
+      - data/manifests/en/clean.jsonl
     outs:
-    - data/manifests/en/phonemes.jsonl
+      - data/manifests/en/phonemes.jsonl
 
   noise_injection:
     cmd: python scripts/noise_injection.py
     deps:
-    - scripts/noise_injection.py
-    - data/manifests/en/phonemes.jsonl
+      - scripts/noise_injection.py
+      - data/manifests/en/phonemes.jsonl
     outs:
-    - data/manifests/en/noisy.jsonl
+      - data/manifests/en/noisy.jsonl
 
   inference:
     cmd: python scripts/inference.py
     deps:
-    - scripts/inference.py
-    - data/manifests/en/noisy.jsonl
+      - scripts/inference.py
+      - data/manifests/en/noisy.jsonl
     outs:
-    - data/manifests/en/hypotheses.jsonl
+      - data/manifests/en/hypotheses.jsonl
 
   merge_hi:
-    cmd: cat results/hi_whisper_chunk1.jsonl results/hi_whisper_chunk2.jsonl 
-      results/hi_whisper_chunk3.jsonl results/hi_whisper_chunk4.jsonl 
-      results/hi_whisper_chunk5.jsonl results/hi_whisper_chunk6.jsonl > 
-      results/hi_whisper_full.jsonl
+    cmd: cat results/hi_whisper_chunk1.jsonl results/hi_whisper_chunk2.jsonl results/hi_whisper_chunk3.jsonl results/hi_whisper_chunk4.jsonl results/hi_whisper_chunk5.jsonl results/hi_whisper_chunk6.jsonl > results/hi_whisper_full.jsonl
     deps:
-    - results/hi_whisper_chunk1.jsonl
-    - results/hi_whisper_chunk2.jsonl
-    - results/hi_whisper_chunk3.jsonl
-    - results/hi_whisper_chunk4.jsonl
-    - results/hi_whisper_chunk5.jsonl
-    - results/hi_whisper_chunk6.jsonl
+      - results/hi_whisper_chunk1.jsonl
+      - results/hi_whisper_chunk2.jsonl
+      - results/hi_whisper_chunk3.jsonl
+      - results/hi_whisper_chunk4.jsonl
+      - results/hi_whisper_chunk5.jsonl
+      - results/hi_whisper_chunk6.jsonl
     outs:
-    - results/hi_whisper_full.jsonl
+      - results/hi_whisper_full.jsonl
 
+  evaluate:
+    cmd: >
+      python scripts/evaluate.py
+      --hyp data/manifests/en/hypotheses.jsonl
+      --out results/metrics.json
+    deps:
+      - scripts/evaluate.py
+      - data/manifests/en/hypotheses.jsonl
+    metrics:
+      - results/metrics.json
+
+  evaluate_hi:
+    cmd: >
+      python scripts/evaluate_per.py
+      --hyp results/hi_whisper_full.jsonl
+      --ref data/manifests/hi/validated_phon.jsonl
+      --out results/hi_per.json
+    deps:
+      - scripts/evaluate_per.py
+      - results/hi_whisper_full.jsonl
+      - data/manifests/hi/validated_phon.jsonl
+    metrics:
+      - results/hi_per.json
+
+  plot_results:
+    cmd: >
+      python scripts/plot_results.py
+      --metrics results/metrics.json
+      --out results/per_vs_snr.png
+    deps:
+      - scripts/plot_results.py
+      - results/metrics.json
+    plots:
+      - results/per_vs_snr.png
+
+  plot_hi:
+    cmd: >
+      python scripts/plot_per_vs_snr.py
+      --per results/hi_per.json
+      --out results/per_vs_snr_multi.png
+    deps:
+      - scripts/plot_per_vs_snr.py
+      - results/hi_per.json
+    plots:
+      - results/per_vs_snr_multi.png
+
+  plot_mean:
+    cmd: >
+      python scripts/plot_per_vs_snr.py
+      --per results/metrics.json results/hi_per.json
+      --out results/per_vs_snr_mean.png
+    deps:
+      - scripts/plot_per_vs_snr.py
+      - results/metrics.json
+      - results/hi_per.json
+    plots:
+      - results/per_vs_snr_mean.png

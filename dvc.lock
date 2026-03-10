@@ -118,3 +118,111 @@ stages:
       md5: bfba0dd96c78c0dfdd8ee5808f73bc66
       size: 2736451
       isexec: true
+  evaluate:
+    cmd: "python scripts/evaluate.py --hyp data/manifests/en/hypotheses.jsonl --out
+      results/metrics.json\n"
+    deps:
+    - path: data/manifests/en/hypotheses.jsonl
+      hash: md5
+      md5: 1923c4fde479bebf13359577b84d806e
+      size: 4440
+      isexec: true
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: 5232d2972c8a5eaab46dee4f991727db
+      size: 1410
+      isexec: true
+    outs:
+    - path: results/metrics.json
+      hash: md5
+      md5: 6c53acc21d38eb472a3fc3d2e1b05986
+      size: 203
+      isexec: true
+  evaluate_hi:
+    cmd: "python scripts/evaluate_per.py --hyp results/hi_whisper_full.jsonl --ref
+      data/manifests/hi/validated_phon.jsonl --out results/hi_per.json\n"
+    deps:
+    - path: data/manifests/hi/validated_phon.jsonl
+      hash: md5
+      md5: b129d0f977b5b2cea0eb7f4333c3ede3
+      size: 3986695
+      isexec: true
+    - path: results/hi_whisper_full.jsonl
+      hash: md5
+      md5: bfba0dd96c78c0dfdd8ee5808f73bc66
+      size: 2736451
+      isexec: true
+    - path: scripts/evaluate_per.py
+      hash: md5
+      md5: 8f6d726a49812a688bed9db1544a2b06
+      size: 2381
+      isexec: true
+    outs:
+    - path: results/hi_per.json
+      hash: md5
+      md5: 02e6e10cb4ae516a4310a6d83c7ebac2
+      size: 60
+      isexec: true
+  plot_results:
+    cmd: "python scripts/plot_results.py --metrics results/metrics.json --out results/per_vs_snr.png\n"
+    deps:
+    - path: results/metrics.json
+      hash: md5
+      md5: 6c53acc21d38eb472a3fc3d2e1b05986
+      size: 203
+      isexec: true
+    - path: scripts/plot_results.py
+      hash: md5
+      md5: 73c26377dde429c84ce6a6aec7d64191
+      size: 830
+      isexec: true
+    outs:
+    - path: results/per_vs_snr.png
+      hash: md5
+      md5: fa49e8f03c8b6a8e7bb840819f1846eb
+      size: 27472
+      isexec: true
+  plot_hi:
+    cmd: "python scripts/plot_per_vs_snr.py --per results/hi_per.json --out results/per_vs_snr_multi.png\n"
+    deps:
+    - path: results/hi_per.json
+      hash: md5
+      md5: 02e6e10cb4ae516a4310a6d83c7ebac2
+      size: 60
+      isexec: true
+    - path: scripts/plot_per_vs_snr.py
+      hash: md5
+      md5: d5dfdfa69d0c6985e8d42cab69f720db
+      size: 1355
+      isexec: true
+    outs:
+    - path: results/per_vs_snr_multi.png
+      hash: md5
+      md5: d944c55f84349bfda702d1010727088c
+      size: 21616
+      isexec: true
+  plot_mean:
+    cmd: "python scripts/plot_per_vs_snr.py --per results/metrics.json results/hi_per.json
+      --out results/per_vs_snr_mean.png\n"
+    deps:
+    - path: results/hi_per.json
+      hash: md5
+      md5: 02e6e10cb4ae516a4310a6d83c7ebac2
+      size: 60
+      isexec: true
+    - path: results/metrics.json
+      hash: md5
+      md5: 6c53acc21d38eb472a3fc3d2e1b05986
+      size: 203
+      isexec: true
+    - path: scripts/plot_per_vs_snr.py
+      hash: md5
+      md5: d5dfdfa69d0c6985e8d42cab69f720db
+      size: 1355
+      isexec: true
+    outs:
+    - path: results/per_vs_snr_mean.png
+      hash: md5
+      md5: 04c0a953abec25908670382e1a082787
+      size: 23394
+      isexec: true

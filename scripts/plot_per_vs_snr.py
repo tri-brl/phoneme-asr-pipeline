@@ -1,37 +1,42 @@
+#!/usr/bin/env python3
+import argparse
 import json
 import matplotlib.pyplot as plt
-import argparse
 
-def load_per(path):
-    with open(path, "r") as f:
-        return json.load(f)
+def load_curves(path):
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    # If the file is a dict (like metrics.json), wrap it in a list
+    if isinstance(data, dict):
+        return [data]
+    return data  # already a list of dicts
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--per", nargs="+", required=True,
-                        help="List of PER metric files (JSON)")
-    parser.add_argument("--out", required=True,
-                        help="Output plot filename")
+def main():
+    parser = argparse.ArgumentParser(description="Plot PER vs SNR from one or more JSON files")
+    parser.add_argument("--per", type=str, nargs="+", required=True,
+                        help="One or more JSON files with PER results aggregated by SNR")
+    parser.add_argument("--out", type=str, required=True,
+                        help="Output PNG file for the plot")
     args = parser.parse_args()
 
-    # Load all PER curves
-    curves = [load_per(p) for p in args.per]
+    plt.figure(figsize=(6,4))
 
-    # Assume each JSON has {"snr_db": [...], "per": [...]}
-    snr_levels = curves[0]["snr_db"]
-    per_values = [c["per"] for c in curves]
+    for path in args.per:
+        curves = load_curves(path)
+        snr_levels = [c["snr_db"] for c in curves if "snr_db" in c]
+        per_values = [c["per"] for c in curves if "per" in c]
 
-    # Compute mean PER across languages
-    mean_per = [sum(vals)/len(vals) for vals in zip(*per_values)]
-
-    # Plot each language curve
-    for i, c in enumerate(curves):
-        plt.plot(c["snr_db"], c["per"], label=f"Lang {i+1}")
-
-    # Plot mean curve
-    plt.plot(snr_levels, mean_per, label="Mean", linewidth=3, color="black")
+        label = path.split("/")[-1]
+        plt.plot(snr_levels, per_values, marker="o", linestyle="-", label=label)
 
     plt.xlabel("SNR (dB)")
-    plt.ylabel("Phoneme Error Rate (PER)")
+    plt.ylabel("Average PER")
+    plt.title("PER vs SNR")
+    plt.grid(True)
     plt.legend()
+    plt.tight_layout()
     plt.savefig(args.out)
+    print(f"Plot saved to {args.out}")
+
+if __name__ == "__main__":
+    main()
