@@ -1,4 +1,9 @@
-# Phoneme-ASR Pipeline Report
+---
+title: "Phoneme-ASR Pipeline Report"
+author: "Tori Baral"
+date: "March 11, 2026"
+institute: "Université Paris Cité"
+---
 
 ## 1. Project Overview
 This repository contains a reproducible pipeline for phoneme-level and word-level ASR evaluation in Hindi and English.  
@@ -148,12 +153,15 @@ dvc status
 
 
 
-Plots available in `/results`:
+**Figures (embedded below):**
 
-- wer_plot.png – WER comparison across models
-- per_vs_snr.png – PER vs SNR visualization
-- per_vs_snr_multi.png – PER vs SNR (multi-model comparison)
-- per_vs_snr_mean.png – PER vs SNR (mean values)
+![WER comparison](results/wer_plot.png)
+
+![PER vs SNR](results/per_vs_snr.png)
+
+![PER vs SNR (multi-model comparison)](results/per_vs_snr_multi.png)
+
+![PER vs SNR (mean values)](results/per_vs_snr_mean.png)
 
 ---
 
@@ -163,5 +171,9 @@ Plots available in `/results`:
 - Known limitations:
   - Long jobs may require chunked runs with resume
   - Phonemizer dependency may need system-level packages (e.g., `espeak`)
+
+**Public GitHub Repository:**  
+https://github.com/tri-brl/phoneme-asr-pipeline
+
 
 Credits: Developed by **Tori Baral**, with reproducibility and transparency as guiding principles.
