@@ -1,2 +1,7 @@
-/wer_plot.png
-/hi_whisper_full.jsonl
+# Ignore large intermediate files
+*.jsonl
+*.json
+
+# Allow plots to be tracked
+!*.png
+!*.pdf
