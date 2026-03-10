@@ -3,24 +3,29 @@ stages:
   create_manifest:
     cmd: python scripts/create_manifest.py
     deps:
+    - path: data/raw/en/
+      hash: md5
+      md5: e5925a06a6054335571fb97d2315f477.dir
+      size: 3022426
+      nfiles: 4
     - path: scripts/create_manifest.py
       hash: md5
-      md5: 77ecb30a82680a4f09116f1b45f712df
-      size: 506
+      md5: d2a77a02e8e46d166e49f3d262e96fb2
+      size: 1896
       isexec: true
     outs:
     - path: data/manifests/en/clean.jsonl
       hash: md5
-      md5: 6c23426dea5ebbfbe18bb53cdeb5eb27
-      size: 99
+      md5: abb58d5b3ea21a28a585a1bd11cc7289
+      size: 325
       isexec: true
   text_to_phonemes:
     cmd: python scripts/text_to_phonemes.py
     deps:
     - path: data/manifests/en/clean.jsonl
       hash: md5
-      md5: 6c23426dea5ebbfbe18bb53cdeb5eb27
-      size: 99
+      md5: abb58d5b3ea21a28a585a1bd11cc7289
+      size: 325
       isexec: true
     - path: scripts/text_to_phonemes.py
       hash: md5
@@ -30,16 +35,16 @@ stages:
     outs:
     - path: data/manifests/en/phonemes.jsonl
       hash: md5
-      md5: 57a29c44fbc22b6a61670c87403c3336
-      size: 157
+      md5: da271f5665112c452a556272ca6a8dda
+      size: 470
       isexec: true
   add_noise:
     cmd: python scripts/add_noise.py
     deps:
     - path: data/manifests/en/phonemes.jsonl
       hash: md5
-      md5: 57a29c44fbc22b6a61670c87403c3336
-      size: 157
+      md5: da271f5665112c452a556272ca6a8dda
+      size: 470
       isexec: true
     - path: scripts/add_noise.py
       hash: md5
@@ -49,63 +54,101 @@ stages:
     outs:
     - path: data/manifests/en/noisy.jsonl
       hash: md5
-      md5: ce69ae44cdd2d33c288acab98bdd6c76
-      size: 188
+      md5: 4301e3aad2dd120a10fb1a8f60687fe3
+      size: 589
       isexec: true
   inference:
     cmd: python scripts/inference.py
     deps:
     - path: data/manifests/en/noisy.jsonl
       hash: md5
-      md5: ce69ae44cdd2d33c288acab98bdd6c76
-      size: 188
+      md5: 56c8455b97bc523cecfb3f42794f5bee
+      size: 3293
       isexec: true
     - path: scripts/inference.py
       hash: md5
-      md5: 0c24c34041b3158b4176a37036968ff9
-      size: 645
+      md5: 82b99f60fa9d4cefe7c82b448c60eb3e
+      size: 1717
       isexec: true
     outs:
     - path: data/manifests/en/hypotheses.jsonl
       hash: md5
-      md5: 4da02c5e278ad83ec1b43cbd835e605f
-      size: 217
+      md5: 1923c4fde479bebf13359577b84d806e
+      size: 4440
       isexec: true
   evaluate:
     cmd: python scripts/evaluate.py
     deps:
     - path: data/manifests/en/hypotheses.jsonl
       hash: md5
-      md5: 4da02c5e278ad83ec1b43cbd835e605f
-      size: 217
+      md5: 1923c4fde479bebf13359577b84d806e
+      size: 4440
       isexec: true
     - path: scripts/evaluate.py
       hash: md5
-      md5: a71079f543692eeff9d696f4447b1068
-      size: 922
+      md5: aabff6994403f6e0e7b6d46091a7577a
+      size: 1489
       isexec: true
     outs:
     - path: results/metrics.json
       hash: md5
-      md5: cb1209a687fe8e6a470d508d251d0403
-      size: 90
+      md5: edbb7af1e6a2f062a8d111935d9eea7f
+      size: 224
       isexec: true
   plot_results:
     cmd: python scripts/plot_results.py
     deps:
     - path: results/metrics.json
       hash: md5
-      md5: cb1209a687fe8e6a470d508d251d0403
-      size: 90
+      md5: edbb7af1e6a2f062a8d111935d9eea7f
+      size: 224
       isexec: true
     - path: scripts/plot_results.py
       hash: md5
-      md5: 733ace83292fef7395557855c68153f2
-      size: 624
+      md5: 73c26377dde429c84ce6a6aec7d64191
+      size: 830
       isexec: true
     outs:
-    - path: results/wer_plot.png
+    - path: results/per_vs_snr.png
       hash: md5
-      md5: a9e5b8fcc79aaf3271bc2ba4e57b51d6
-      size: 13248
+      md5: fa49e8f03c8b6a8e7bb840819f1846eb
+      size: 27472
+      isexec: true
+  phoneme_conversion:
+    cmd: python scripts/phoneme_conversion.py
+    deps:
+    - path: data/manifests/en/clean.jsonl
+      hash: md5
+      md5: abb58d5b3ea21a28a585a1bd11cc7289
+      size: 325
+      isexec: true
+    - path: scripts/phoneme_conversion.py
+      hash: md5
+      md5: 8ac11acbe2a138b87b26e96f0080eeb4
+      size: 1162
+      isexec: true
+    outs:
+    - path: data/manifests/en/phonemes.jsonl
+      hash: md5
+      md5: 4d0c1bfcabeb15668602ce105bc3e8e1
+      size: 595
+      isexec: true
+  noise_injection:
+    cmd: python scripts/noise_injection.py
+    deps:
+    - path: data/manifests/en/phonemes.jsonl
+      hash: md5
+      md5: 4d0c1bfcabeb15668602ce105bc3e8e1
+      size: 595
+      isexec: true
+    - path: scripts/noise_injection.py
+      hash: md5
+      md5: 452fb147624341385977295d6f7e14fd
+      size: 1658
+      isexec: true
+    outs:
+    - path: data/manifests/en/noisy.jsonl
+      hash: md5
+      md5: 56c8455b97bc523cecfb3f42794f5bee
+      size: 3293
       isexec: true
