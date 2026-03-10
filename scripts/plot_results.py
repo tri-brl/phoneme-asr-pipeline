@@ -1,5 +1,6 @@
-import json, os
+import json
 import matplotlib.pyplot as plt
+import os
 
 def main():
     os.makedirs("results", exist_ok=True)
@@ -8,18 +9,23 @@ def main():
     with open("results/metrics.json", "r") as fin:
         metrics = json.load(fin)
 
-    wer = metrics.get("WER", 0.0)
-    num_samples = metrics.get("num_samples", 0)
+    per_by_snr = metrics.get("per_by_snr", {})
+    snrs = sorted(per_by_snr.keys(), key=lambda x: float(x) if x != "clean" else float("inf"))
+    values = [per_by_snr[snr] for snr in snrs]
 
-    # Simple bar plot
-    plt.figure(figsize=(6,4))
-    plt.bar(["WER"], [wer], color="skyblue")
-    plt.title(f"Word Error Rate (WER) over {num_samples} samples")
-    plt.ylabel("WER")
-    plt.ylim(0, 1)
+    # Plot
+    plt.figure(figsize=(8, 6))
+    plt.plot(snrs, values, marker="o", linestyle="-", color="blue", label="PER vs SNR")
+    plt.xlabel("SNR (dB)")
+    plt.ylabel("Phoneme Error Rate (PER)")
+    plt.title("PER vs. SNR")
+    plt.grid(True)
+    plt.legend()
 
-    plt.savefig("results/wer_plot.png")
-    print("Plot saved to results/wer_plot.png")
+    # Save plot
+    out_path = "results/per_vs_snr.png"
+    plt.savefig(out_path)
+    print(f"Plot saved to {out_path}")
 
 if __name__ == "__main__":
     main()
