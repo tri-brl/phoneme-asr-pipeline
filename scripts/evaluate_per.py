@@ -59,7 +59,7 @@ def main():
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
 
-    print(f"✅ Wrote PER results for {total_len} utterances to {args.out}")
+    print(f"Wrote PER results for {total_len} utterances to {args.out}")
     print(f"Average PER across all utterances: {avg_per:.4f}")
     print("Bucketed PER by SNR:")
     for r in results:
