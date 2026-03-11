@@ -31,7 +31,7 @@ def process_language(args_tuple):
         log_file = open(log_path, "a", encoding="utf-8")
         sys.stdout = log_file
         sys.stderr = log_file
-        print(f"🔎 Logging enabled for {lang}. Writing to {log_path}")
+        print(f"Logging enabled for {lang}. Writing to {log_path}")
 
     # Read manifest
     with open(manifest_path, "r", encoding="utf-8") as f:
@@ -39,7 +39,7 @@ def process_language(args_tuple):
 
     if limit is not None:
         manifest_entries = manifest_entries[:limit]
-        print(f"⚡ [{lang}] Processing only first {limit} utterances")
+        print(f"[{lang}] Processing only first {limit} utterances")
 
     # Split manifest into chunks for multiprocessing
     if total_chunks > 1:
@@ -47,7 +47,7 @@ def process_language(args_tuple):
         start = chunk_id * chunk_size
         end = (chunk_id + 1) * chunk_size if chunk_id < total_chunks - 1 else len(manifest_entries)
         manifest_entries = manifest_entries[start:end]
-        print(f"🧩 [{lang}] Worker {chunk_id+1}/{total_chunks} processing {len(manifest_entries)} utterances")
+        print(f"[{lang}] Worker {chunk_id+1}/{total_chunks} processing {len(manifest_entries)} utterances")
 
     # Resume support
     processed_ids = set()
@@ -58,7 +58,7 @@ def process_language(args_tuple):
                 entry = json.loads(line)
                 results.append(entry)
                 processed_ids.add(entry["utt_id"])
-        print(f"🔄 [{lang}] Resuming: {len(processed_ids)} utterances already processed")
+        print(f"[{lang}] Resuming: {len(processed_ids)} utterances already processed")
 
     # Initialize phonemizer
     if HAS_PHONEMIZER and not no_phonemizer:
@@ -67,7 +67,7 @@ def process_language(args_tuple):
         phonemizer = None
 
     # Load Whisper model ONCE
-    print(f"🚀 Loading Whisper model {model_size} on {device}")
+    print(f"Loading Whisper model {model_size} on {device}")
     model = whisper.load_model(model_size, device=device)
 
     # Global progress bar across all utterances in this chunk
@@ -110,7 +110,7 @@ def process_language(args_tuple):
 
             pbar.update(1)
 
-    print(f"✅ Finished {lang} chunk {chunk_id+1}/{total_chunks}. Wrote {len(results)} hypotheses to {out_path}")
+    print(f"Finished {lang} chunk {chunk_id+1}/{total_chunks}. Wrote {len(results)} hypotheses to {out_path}")
 
     if log_path:
         log_file.close()
