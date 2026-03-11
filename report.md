@@ -1,120 +1,68 @@
+# phoneme-asr-pipeline
+
+pipeline for phoneme-level and word-level ASR evaluation on Hindi and English, tracked with DVC.
+
 ---
-title: "Phoneme-ASR Pipeline Report"
-author: "Tori Baral"
-date: "March 11, 2026"
-institute: "Université Paris Cité"
----
 
-## 1. Project Overview
-This repository contains a reproducible pipeline for phoneme-level and word-level ASR evaluation in Hindi and English.  
-The pipeline is designed for reproducible experiments with clear benchmarking.  
+## setup
 
-Key features:
-- Chunked parallel processing with resume/abort strategies
-- Robust manifest generation and MP3 → WAV conversion
-- Phoneme-level evaluation using phonemizer integration
-- Transparent benchmarking with plots for multi-model comparison
-- Full reproducibility ensured via DVC pipeline management
+tested on Ubuntu 20.04 / WSL2, Python 3.9+. GPU recommended but CPU works too.
 
-## 2. Environment Setup
-
-### Prerequisites
-- **OS**: Linux (tested on Ubuntu 20.04) or WSL2 on Windows.
-- **Python**: 3.9+ recommended.
-- **GPU**: CUDA-enabled GPU for faster runs (CPU fallback supported).
-
-### Virtual Environment
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-```
-
-### Dependencies
-Install required packages:
-```bash
 pip install -r requirements.txt
 ```
 
-If using Conda:
+or with conda:
+
 ```bash
 conda env create -f environment.yml
 conda activate phoneme-asr
 ```
 
-
-
-
-### Key Packages
-- `torch`, `torchaudio`, `transformers`
-- `phonemizer`
-- `dvc`
-- `matplotlib`, `seaborn`
-- `tqdm`
+main dependencies: `torch`, `torchaudio`, `transformers`, `phonemizer`, `dvc`, `matplotlib`, `seaborn`, `tqdm`
 
 ---
 
-## 3. Repository Structure
-- `/scripts/` – pipeline scripts (`run_wav2vec2.py`, `run_whisper_hi.py`, evaluation, plotting)
-- `/data/` – manifests and audio files
-- `/results/` – outputs, plots, benchmark scores
-- `/dvc/` – pipeline metadata and lockfiles
-- `README.md` – quick start guide
-- `report.md` – detailed handoff document
+## repo structure
+
+- `scripts/` - all pipeline scripts (inference, evaluation, plotting)
+- `data/` - manifests and audio
+- `results/` - outputs and plots
+- `dvc/` - pipeline metadata
 
 ---
 
-## 4. Pipeline Execution
+## running the pipeline
 
-#### Step 1: Data Preparation
-
-- Convert MP3 to WAV:
+**1. data prep**
 
 ```bash
 python scripts/convert_mp3_to_wav.py data/raw/ data/wav/
-```
-
-- Generate manifests:
-
-```bash
 python scripts/generate_manifest.py data/wav/ data/manifest.json
 ```
 
-#### Step 2: Run ASR Models
-
-- Hindi Whisper pipeline:
+**2. inference**
 
 ```bash
 python scripts/run_whisper_hi.py --manifest data/manifest.json --output results/whisper_hi/
-```
-
-- Wav2Vec2 pipeline:
-
-```bash
 python scripts/run_wav2vec2.py --manifest data/manifest.json --output results/wav2vec2/
 ```
 
-Supports:
-- Chunked parallel runs
-- Resume/abort strategies
-- GPU/CPU split
+both scripts support chunked runs and resume if a job dies halfway through.
 
-#### Step 3: Evaluation
-
-- Word-level WER:
+**3. evaluation**
 
 ```bash
+# word-level WER
 python scripts/evaluate.py --pred results/whisper_hi/preds.json --ref data/manifest.json --metric wer
-```
 
-- Phoneme-level PER:
-
-```bash
+# phoneme-level PER
 python scripts/evaluate.py --pred results/whisper_hi/preds.json --ref data/manifest.json --metric per
 ```
 
-#### Step 4: Plotting
-
-- Generate comparison plots:
+**4. plots**
 
 ```bash
 python scripts/plot_results.py --input results/ --output results/plots/
@@ -122,58 +70,33 @@ python scripts/plot_results.py --input results/ --output results/plots/
 
 ---
 
-## 5. Verification & Reproducibility
-
-- Confirm number of predictions:
+## reproducibility
 
 ```bash
-grep -c "" results/whisper_hi/preds.json
-```
-
-- Reproduce pipeline with DVC:
-
-```bash
-dvc repro
-```
-
-- Check lockfile status:
-
-```bash
-dvc status
+dvc repro   # re-run full pipeline
+dvc status  # check what's stale
 ```
 
 ---
 
-## 6. Results
+## results
 
-| Model         | WER (%) | PER (%) |
+| model         | WER (%) | PER (%) |
 |---------------|---------|---------|
 | Hindi Whisper | 12.5    | 18.3    |
 | Wav2Vec2      | 14.1    | 20.7    |
 
-
-
-**Figures (embedded below):**
-
 ![WER comparison](results/wer_plot.png)
-
-![PER vs SNR](results/per_vs_snr.png)
-
-![PER vs SNR (multi-model comparison)](results/per_vs_snr_multi.png)
-
-![PER vs SNR (mean values)](results/per_vs_snr_mean.png)
+![PER vs SNR](results/per_vs_snr_multi.png)
+![PER vs SNR mean](results/per_vs_snr_mean.png)
 
 ---
 
-## 7. Handoff Notes
-- Repo transfer: Use GitHub → Settings → Danger Zone → Transfer repository.
-- Re-run pipeline: Start from data/raw/, run conversion, manifests, ASR, evaluation, plotting.
-- Known limitations:
-  - Long jobs may require chunked runs with resume
-  - Phonemizer dependency may need system-level packages (e.g., `espeak`)
+## notes
 
-**Public GitHub Repository:**  
-https://github.com/tri-brl/phoneme-asr-pipeline
+- `phonemizer` needs `espeak` installed at the system level (`sudo apt install espeak`)
+- long jobs should be run in chunks using the resume flag
+- to re-run from scratch: start from `data/raw/`, convert, generate manifests, run inference, evaluate, plot
+- I used AI to help me with formatting this report, as well as with some of my graphs
 
-
-Credits: Developed by **Tori Baral**, with reproducibility and transparency as guiding principles.
+repo: https://github.com/tri-brl/phoneme-asr-pipeline
