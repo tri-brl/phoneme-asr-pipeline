@@ -13,7 +13,7 @@ def split_manifest(infile, outdir, chunk_size):
 
     # Calculate number of chunks
     chunks = (total + chunk_size - 1) // chunk_size
-    print(f"📊 Splitting {total} lines into {chunks} chunks of ~{chunk_size} each")
+    print(f"Splitting {total} lines into {chunks} chunks of ~{chunk_size} each")
 
     for i in range(chunks):
         start = i * chunk_size
@@ -24,7 +24,7 @@ def split_manifest(infile, outdir, chunk_size):
         with open(outfile, "w", encoding="utf-8") as fout:
             fout.writelines(chunk_lines)
 
-        print(f"✅ Wrote {len(chunk_lines)} lines to {outfile}")
+        print(f"Wrote {len(chunk_lines)} lines to {outfile}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Split a JSONL manifest into smaller chunks")
